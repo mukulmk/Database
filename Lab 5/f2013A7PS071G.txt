@@ -1,0 +1,66 @@
+mysql> select NAME from CUSTOMER WHERE C_ID IN (SELECT BO.CUST_ID FROM BORROWER BO,LOAN LO WHERE BO.LOAN_NO=LO.LN_NO AND LO.AMOUNT=500000);
++---------+
+| NAME    |
++---------+
+| haritha |
+| himani  |
+| yogitha |
+| radhika |
+| ramu    |
++---------+
+5 rows in set (0.00 sec)
+
+
+mysql> SELECT * FROM BRANCH WHERE BRN_NAME NOT IN(SELECT A.branch_name from ASSETS A WHERE ASSET='mobilebanking'); 
++----------+---------------+
+| BRN_NAME | CITY          |
++----------+---------------+
+| zone2    | guntur        |
+| zone3    | eluru         |
+| zone4    | kakinada      |
+| zone5    | vizag         |
+| zone6    | vijayanagaram |
+| zone9    | chittor       |
++----------+---------------+
+6 rows in set (0.00 sec)
+
+
+mysql> SELECT NAME FROM CUSTOMER WHERE C_ID IN(SELECT CUST_ID FROM BORROWER WHERE LOAN_NO IN(SELECT LN_NO FROM LOAN WHERE AMOUNT=2000000));
++--------+
+| NAME   |
++--------+
+| himani |
++--------+
+1 row in set (0.00 sec)
+
+
+
+mysql> SELECT L_NO AS LOAN_NO,SUM(AMOUNT) AS TOTAL_AMOUNT FROM PAYMENT WHERE L_NO IN(SELECT LOAN_NO FROM BORROWER WHERE CUST_ID IN(SELECT C_ID FROM CUSTOMER WHERE NAME='HIMANI')) GROUP BY L_NO;
++---------+--------------+
+| LOAN_NO | TOTAL_AMOUNT |
++---------+--------------+
+| car2    |         3000 |
+| hou1    |        10000 |
++---------+--------------+
+2 rows in set (0.00 sec)
+
+
+
+mysql> SELECT LN_NO FROM LOAN WHERE (LN_NO,AMOUNT) IN(SELECT L_NO,SUM(AMOUNT) FROM PAYMENT GROUP BY L_NO);
++-------+
+| LN_NO |
++-------+
+| car1  |
++-------+
+1 row in set (0.00 sec)
+
+
+
+mysql> SELECT NAME,C_ID FROM CUSTOMER WHERE C_ID IN(SELECT CUST_ID FROM DEPOSITOR WHERE (CUST_ID,ACCESS_DT) IN(SELECT BO.CUST_ID,PA.DATE FROM BORROWER BO,PAYMENT PA WHERE PA.L_NO IN(SELECT LN_NO FROM LOAN)));
++--------+------+
+| NAME   | C_ID |
++--------+------+
+| himani | c2   |
++--------+------+
+1 row in set (0.00 sec)
+

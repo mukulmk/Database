@@ -1,0 +1,152 @@
+mysql> SELECT * FROM DEPOSITOR WHERE CUST_ID='c6';
++---------+------------+------------+--------+
+| CUST_ID | AC_NO      | ACCESS_DT  | AMOUNT |
++---------+------------+------------+--------+
+| c6      | 2000000001 | 2011-10-10 |   1000 |
+| c6      | 2000000010 | 2011-10-11 |    100 |
++---------+------------+------------+--------+
+2 rows in set (0.00 sec)
+
+
+mysql> SELECT B1.branch_name AS BRANCH1,B2.branch_name AS BRANCH2,B1.ASSET AS FACILITY FROM ASSETS B1,ASSETS B2 WHERE B1.ASSET=B2.ASSET AND B1.branch_name < B2.branch_name ORDER BY FACILITY;
++------------+---------+---------------+
+| BRANCH1    | BRANCH2 | FACILITY      |
++------------+---------+---------------+
+| zone2      | zone6   | fixeddeposit  |
+| headoffice | zone2   | fixeddeposit  |
+| headoffice | zone3   | fixeddeposit  |
+| headoffice | zone6   | fixeddeposit  |
+| zone3      | zone6   | fixeddeposit  |
+| zone1      | zone2   | fixeddeposit  |
+| zone1      | zone3   | fixeddeposit  |
+| zone2      | zone3   | fixeddeposit  |
+| zone1      | zone6   | fixeddeposit  |
+| headoffice | zone1   | fixeddeposit  |
+| headoffice | zone7   | locker        |
+| zone5      | zone9   | locker        |
+| zone3      | zone8   | locker        |
+| zone8      | zone9   | locker        |
+| headoffice | zone8   | locker        |
+| zone6      | zone7   | locker        |
+| zone3      | zone9   | locker        |
+| headoffice | zone9   | locker        |
+| zone6      | zone8   | locker        |
+| zone6      | zone9   | locker        |
+| headoffice | zone3   | locker        |
+| zone5      | zone6   | locker        |
+| zone3      | zone5   | locker        |
+| zone7      | zone8   | locker        |
+| headoffice | zone5   | locker        |
+| zone5      | zone7   | locker        |
+| zone3      | zone6   | locker        |
+| zone7      | zone9   | locker        |
+| headoffice | zone6   | locker        |
+| zone5      | zone8   | locker        |
+| zone3      | zone7   | locker        |
+| zone1      | zone7   | mobilebanking |
+| zone1      | zone8   | mobilebanking |
+| headoffice | zone1   | mobilebanking |
+| headoffice | zone7   | mobilebanking |
+| headoffice | zone8   | mobilebanking |
+| zone7      | zone8   | mobilebanking |
+| headoffice | zone2   | netbanking    |
+| zone2      | zone3   | netbanking    |
+| headoffice | zone3   | netbanking    |
+| zone2      | zone4   | netbanking    |
+| zone1      | zone2   | netbanking    |
+| zone3      | zone4   | netbanking    |
+| headoffice | zone4   | netbanking    |
+| zone1      | zone3   | netbanking    |
+| zone1      | zone4   | netbanking    |
+| headoffice | zone1   | netbanking    |
++------------+---------+---------------+
+47 rows in set (0.00 sec)
+
+
+mysql> SELECT ACC_NO FROM ACCOUNT A,ASSETS ASS WHERE ASS.ASSET='NETBANKING' AND A.BR_NAME = ASS.branch_name; 
++------------+
+| ACC_NO     |
++------------+
+| 2000000001 |
+| 2000000002 |
+| 2000000003 |
+| 2000000004 |
+| 2000000008 |
+| 2000000005 |
++------------+
+6 rows in set (0.00 sec)
+
+
+
+mysql> SELECT * FROM PAYMENT WHERE DATE >= '2009-10-09';
++------+------+------------+--------+
+| P_NO | L_NO | DATE       | AMOUNT |
++------+------+------------+--------+
+| p1   | car1 | 2011-01-09 |   3000 |
+| p3   | car1 | 2011-01-01 |   3000 |
+| p1   | car2 | 2011-01-01 |   3000 |
+| p2   | hou1 | 2010-10-09 |   5000 |
++------+------+------------+--------+
+4 rows in set (0.00 sec)
+
+
+mysql> SELECT DISTINCT NAME FROM CUSTOMER CUST,LOAN LO,BORROWER BO WHERE CUST.C_ID=BO.CUST_ID AND BO.LOAN_NO=LO. LN_NO AND LO.AMOUNT>'5000000';
++----------+
+| NAME     |
++----------+
+| haritha  |
+| sachitra |
+| ramu     |
++----------+
+3 rows in set (0.00 sec)
+
+
+mysql> SELECT l1.LN_NO AS ln1,l2.LN_NO AS ln2,l1.AMOUNT AS amount FROM LOAN l1,LOAN l2 WHERE l1.AMOUNT=l2.AMOUNT AND l1.AMOUNT > '2000000' AND l1.AMOUNT < '8000000' AND l1.LN_NO!=l2.LN_NO AND l1.LN_NO>l2.LN_NO;
++------+------+---------+
+| ln1  | ln2  | amount  |
++------+------+---------+
+| per2 | per1 | 6000000 |
+| per3 | per1 | 6000000 |
+| per3 | per2 | 6000000 |
++------+------+---------+
+3 rows in set (0.00 sec)
+
+
+Q7-WITHOUT UNION
+mysql> SELECT * FROM LOAN WHERE AMOUNT = '500000' OR BR_NAME = 'ZONE5' OR BR_NAME='ZONE1';
++-------+---------+---------+
+| LN_NO | AMOUNT  | BR_NAME |
++-------+---------+---------+
+| car1  |  500000 | zone6   |
+| car2  |  500000 | zone7   |
+| car3  |  500000 | zone6   |
+| car4  |  500000 | zone8   |
+| hou1  | 2000000 | zone1   |
+| hou2  | 4000000 | zone1   |
+| hou3  | 8000000 | zone5   |
+| hou5  |  500000 | zone2   |
+| hou6  |  500000 | zone8   |
+| per3  | 6000000 | zone5   |
+| per4  |  500000 | zone2   |
++-------+---------+---------+
+11 rows in set (0.01 sec)
+
+
+WITH UNION
+mysql> SELECT * FROM LOAN WHERE AMOUNT = '500000' UNION SELECT * FROM LOAN WHERE BR_NAME = 'zone5' UNION SELECT * FROM LOAN WHERE BR_NAME = 'zone1';
++-------+---------+---------+
+| LN_NO | AMOUNT  | BR_NAME |
++-------+---------+---------+
+| car1  |  500000 | zone6   |
+| car2  |  500000 | zone7   |
+| car3  |  500000 | zone6   |
+| car4  |  500000 | zone8   |
+| hou5  |  500000 | zone2   |
+| hou6  |  500000 | zone8   |
+| per4  |  500000 | zone2   |
+| hou3  | 8000000 | zone5   |
+| per3  | 6000000 | zone5   |
+| hou1  | 2000000 | zone1   |
+| hou2  | 4000000 | zone1   |
++-------+---------+---------+
+11 rows in set (0.00 sec)

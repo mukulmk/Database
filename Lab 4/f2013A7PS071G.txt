@@ -1,0 +1,148 @@
+mysql> select DISTINCT NAME from CUSTOMER CUST,LOAN LO,BORROWER BO WHERE CUST.C_ID=BO.CUST_ID AND BO.LOAN_NO=LO.LN_NO AND LO.BR_NAME='zone1' ORDER BY NAME;
++---------+
+| NAME    |
++---------+
+| himani  |
+| saritha |
+| shankar |
++---------+
+3 rows in set (0.00 sec)
+
+
+
+mysql> SELECT LO.LN_NO,COUNT(PA.P_NO) FROM LOAN LO LEFT JOIN PAYMENT PA ON LO.LN_NO=PA.L_NO GROUP BY LO.LN_NO;
++-------+----------------+
+| LN_NO | COUNT(PA.P_NO) |
++-------+----------------+
+| car1  |              3 |
+| car2  |              1 |
+| car3  |              0 |
+| car4  |              0 |
+| hou1  |              2 |
+| hou2  |              1 |
+| hou3  |              0 |
+| hou4  |              0 |
+| hou5  |              0 |
+| hou6  |              0 |
+| per1  |              2 |
+| per2  |              1 |
+| per3  |              0 |
+| per4  |              0 |
++-------+----------------+
+14 rows in set (0.00 sec)
+
+
+
+mysql> SELECT BR_NAME,SUM(AC.BALANCE) AS TOTAL_BALANCE FROM ACCOUNT AC GROUP BY BR_NAME HAVING TOTAL_BALANCE>'10000';
++---------+---------------+
+| BR_NAME | TOTAL_BALANCE |
++---------+---------------+
+| zone1   |         13000 |
+| zone9   |        100000 |
++---------+---------------+
+2 rows in set (0.00 sec)
+
+
+mysql> SELECT DISTINCT C_ID FROM CUSTOMER CUST LEFT JOIN DEPOSITOR DE ON CUST.C_ID=DE.CUST_ID WHERE DE.AMOUNT IS NULL ORDER BY C_ID; 
++------+
+| C_ID |
++------+
+| c10  |
+| c11  |
+| c4   |
+| c5   |
+| c7   |
+| c8   |
+| c9   |
++------+
+7 rows in set (0.00 sec)
+
+
+mysql> SELECT DISTINCT C_ID FROM CUSTOMER CUST,DEPOSITOR DE,LOAN LO,BORROWER BO WHERE CUST.C_ID=DE.CUST_ID OR CUST.C_ID=BO.CUST_ID ORDER BY C_ID;
++------+
+| C_ID |
++------+
+| c1   |
+| c2   |
+| c3   |
+| c4   |
+| c5   |
+| c6   |
+| c7   |
+| c8   |
++------+
+8 rows in set (0.01 sec)
+
+
+
+mysql> SELECT DISTINCT C_ID FROM CUSTOMER CUST JOIN LOAN LO JOIN DEPOSITOR DE JOIN BORROWER BO ON CUST.C_ID=DE.CUST_ID AND(DE.AC_NO='2000000001' OR DE.AC_NO='2000000010') AND LO.LN_NO=BO.LOAN_NO AND CUST.C_ID=BO.CUST_ID;
++------+
+| C_ID |
++------+
+| c6   |
++------+
+1 row in set (0.01 sec)
+
+
+
+
+7-A
+mysql> SELECT LN_NO,BR_NAME,AVG(AMOUNT) AS AMT FROM LOAN GROUP BY BR_NAME ORDER BY AMT ASC;
++-------+---------+--------------+
+| LN_NO | BR_NAME | AMT          |
++-------+---------+--------------+
+| car4  | zone8   |  500000.0000 |
+| hou5  | zone2   |  500000.0000 |
+| car2  | zone7   |  500000.0000 |
+| hou1  | zone1   | 3000000.0000 |
+| car1  | zone6   | 3000000.0000 |
+| per1  | zone3   | 6000000.0000 |
+| per2  | zone4   | 6000000.0000 |
+| hou3  | zone5   | 7000000.0000 |
++-------+---------+--------------+
+8 rows in set (0.00 sec)
+
+
+7-B
+mysql> SELECT LN_NO,BR_NAME,AVG(AMOUNT) AS AMT FROM LOAN GROUP BY BR_NAME ORDER BY AMT DESC;
++-------+---------+--------------+
+| LN_NO | BR_NAME | AMT          |
++-------+---------+--------------+
+| hou3  | zone5   | 7000000.0000 |
+| per1  | zone3   | 6000000.0000 |
+| per2  | zone4   | 6000000.0000 |
+| hou1  | zone1   | 3000000.0000 |
+| car1  | zone6   | 3000000.0000 |
+| car4  | zone8   |  500000.0000 |
+| hou5  | zone2   |  500000.0000 |
+| car2  | zone7   |  500000.0000 |
++-------+---------+--------------+
+8 rows in set (0.00 sec)
+
+
+
+mysql> SELECT branch_name FROM ASSETS GROUP BY branch_name HAVING COUNT(ASSET)>=5;
+Empty set (0.00 sec)
+
+
+mysql> SELECT C_ID,COUNT(LOAN_NO) AS TOTAL_LOANS FROM CUSTOMER CUST LEFT JOIN BORROWER BO ON CUST.C_ID=BO.CUST_ID GROUP BY C_ID ORDER BY C_ID;
++------+-------------+
+| C_ID | TOTAL_LOANS |
++------+-------------+
+| c1   |           3 |
+| c10  |           0 |
+| c11  |           0 |
+| c2   |           2 |
+| c3   |           1 |
+| c4   |           1 |
+| c5   |           3 |
+| c6   |           1 |
+| c7   |           1 |
+| c8   |           3 |
+| c9   |           0 |
++------+-------------+
+11 rows in set (0.00 sec)
+
+
+
+

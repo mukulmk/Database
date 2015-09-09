@@ -1,0 +1,195 @@
+ALTER TABLE DEPOSITOR ADD COLUMN AMOUNT DECIMAL;
+
++-----------+---------------+------+-----+------------+-------+
+| Field     | Type          | Null | Key | Default    | Extra |
++-----------+---------------+------+-----+------------+-------+
+| CUST_ID   | char(5)       | NO   | PRI |            |       |
+| AC_NO     | varchar(20)   | NO   | PRI |            |       |
+| ACCESS_DT | date          | NO   | PRI | 0000-00-00 |       |
+| AMOUNT    | decimal(10,0) | YES  |     | NULL       |       |
++-----------+---------------+------+-----+------------+-------+
+
+
+CREATE TABLE ASSETS (branch_name VARCHAR(10),FOREIGN KEY (branch_name) REFERENCES BRANCH(BRN_NAME),ASSET VARCHAR(15),PRIMARY KEY (branch_name,ASSET));
+
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| branch_name | varchar(10) | NO   | PRI |         |       |
+| ASSET       | varchar(15) | NO   | PRI |         |       |
++-------------+-------------+------+-----+---------+-------+
+
+
+ALTER TABLE CUSTOMER ADD COLUMN PAN_NO VARCHAR(20) UNIQUE NOT NULL;
+
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| C_ID   | char(5)     | NO   | PRI | NULL    |       |
+| NAME   | varchar(30) | YES  |     | NULL    |       |
+| STREET | varchar(25) | YES  |     | NULL    |       |
+| CITY   | varchar(30) | YES  |     | NULL    |       |
+| PAN_NO | varchar(20) | NO   | UNI | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+
+
+LOAD DATA LOCAL INFILE '/home/user/Desktop/Downloads/branch.csv' INTO TABLE BRANCH FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' ;
+SELECT * FROM BRANCH;
+ BRN_NAME   | CITY          |
++------------+---------------+
+| headoffice | hyderabad     |
+| zone1      | vijayawada    |
+| zone2      | guntur        |
+| zone3      | eluru         |
+| zone4      | kakinada      |
+| zone5      | vizag         |
+| zone6      | vijayanagaram |
+| zone7      | srikakulam    |
+| zone8      | tirupathi     |
+| zone9      | chittor       |
++------------+---------------+
+
+
+LOAD DATA LOCAL INFILE '/home/user/Desktop/Downloads/customer.csv' INTO TABLE CUSTOMER FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' ;
+SELECT * FROM CUSTOMER;
++------+----------+--------------+--------------+------------+
+| C_ID | NAME     | STREET       | CITY         | PAN_NO     |
++------+----------+--------------+--------------+------------+
+| c1   | haritha  | nalanda      | machlipatnam | ajbpa6623m |
+| c10  | soumi    | amberpet     | kakinada     | hgtr3456k  |
+| c11  | lahya    | mehedipatnam | guntur       | hfry2134g  |
+| c2   | himani   | nalanda      | machlipatnam | kldg2345m  |
+| c3   | shankar  | kadamba      | eluru        | kjht1234e  |
+| c4   | saritha  | kadamba      | eluru        | uytf4563e  |
+| c5   | sachitra | saraswathi   | nandigama    | hgtr2190n  |
+| c6   | yogitha  | kaveri       | hyderabad    | gfrt3427h  |
+| c7   | radhika  | kaveri       | hyderabad    | desw2187h  |
+| c8   | ramu     | azad         | vijayawada   | dspo1432v  |
+| c9   | samu     | malakpet     | vizag        | jhty4320v  |
++------+----------+--------------+--------------+------------+
+
+LOAD DATA LOCAL INFILE '/home/user/Desktop/Downloads/loan.csv' INTO TABLE LOAN FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' ;
+SELECT * FROM LOAN;
+-------+---------+---------+
+| LN_NO | AMOUNT  | BR_NAME |
++-------+---------+---------+
+| car1  |  500000 | zone6   |
+| car2  |  500000 | zone7   |
+| car3  |  500000 | zone6   |
+| car4  |  500000 | zone8   |
+| hou1  | 2000000 | zone1   |
+| hou2  | 4000000 | zone1   |
+| hou3  | 8000000 | zone5   |
+| hou4  | 8000000 | zone6   |
+| hou5  |  500000 | zone2   |
+| hou6  |  500000 | zone8   |
+| per1  | 6000000 | zone3   |
+| per2  | 6000000 | zone4   |
+| per3  | 6000000 | zone5   |
+| per4  |  500000 | zone2   |
++-------+---------+---------+
+
+
+LOAD DATA LOCAL INFILE '/home/user/Desktop/Downloads/payment.csv' INTO TABLE PAYMENT FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' ;
+SELECT * FROM PAYMENT;
++------+------+------------+--------+
+| P_NO | L_NO | DATE       | AMOUNT |
++------+------+------------+--------+
+| p1   | car1 | 2011-01-09 |   3000 |
+| p2   | car1 | 2000-01-09 |   3000 |
+| p3   | car1 | 2011-01-01 |   3000 |
+| p1   | car2 | 2011-01-01 |   3000 |
+| p1   | hou1 | 2000-10-08 |   5000 |
+| p2   | hou1 | 2010-10-09 |   5000 |
+| p1   | hou2 | 2000-10-02 |   6000 |
+| p1   | per1 | 2000-10-03 |   5000 |
+| p2   | per1 | 2000-11-01 |   5000 |
+| p1   | per2 | 2000-12-02 |   5000 |
++------+------+------------+--------+
+
+
+
+LOAD DATA LOCAL INFILE '/home/user/Desktop/Downloads/account.csv' INTO TABLE ACCOUNT FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' ;
+SELECT * FROM ACCOUNT;
++------------+---------+---------+
+| ACC_NO     | BALANCE | BR_NAME |
++------------+---------+---------+
+| 2000000001 |    4000 | zone1   |
+| 2000000002 |    4000 | zone1   |
+| 2000000003 |    5000 | zone1   |
+| 2000000004 |   10000 | zone2   |
+| 2000000005 |   10000 | zone4   |
+| 2000000006 |   10000 | zone6   |
+| 2000000008 |   10000 | zone3   |
+| 2000000009 |   10000 | zone8   |
+| 2000000010 |  100000 | zone9   |
+| 2000000011 |   10000 | zone7   |
++------------+---------+---------+
+
+
+LOAD DATA LOCAL INFILE '/home/user/Desktop/Downloads/borrower.csv' INTO TABLE BORROWER FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' ;
+SELECT * FROM BORROWER;
++---------+---------+
+| CUST_ID | LOAN_NO |
++---------+---------+
+| c1      | car1    |
+| c2      | car2    |
+| c8      | car4    |
+| c2      | hou1    |
+| c3      | hou2    |
+| c4      | hou2    |
+| c5      | hou3    |
+| c5      | hou4    |
+| c1      | hou5    |
+| c6      | hou5    |
+| c7      | hou6    |
+| c8      | hou6    |
+| c8      | per1    |
+| c1      | per2    |
+| c5      | per3    |
++---------+---------+
+
+
+LOAD DATA LOCAL INFILE '/home/user/Desktop/Downloads/depositor.csv' INTO TABLE depositor FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' ;
+SELECT * FROM DEPOSITOR;
++---------+------------+------------+--------+
+| CUST_ID | AC_NO      | ACCESS_DT  | AMOUNT |
++---------+------------+------------+--------+
+| c1      | 2000000005 | 2012-10-23 |    500 |
+| c1      | 2000000009 | 2011-11-11 |    200 |
+| c2      | 2000000002 | 2012-10-10 |    400 |
+| c3      | 2000000008 | 2013-01-01 |    300 |
+| c6      | 2000000001 | 2011-10-10 |   1000 |
+| c6      | 2000000010 | 2011-10-11 |    100 |
++---------+------------+------------+--------+
+
+
+LOAD DATA LOCAL INFILE '/home/user/Desktop/Downloads/asset.csv' INTO TABLE ASSETS FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' ;
+ SELECT * FROM ASSETS;
++-------------+---------------+
+| branch_name | ASSET         |
++-------------+---------------+
+| headoffice  | fixeddeposit  |
+| headoffice  | locker        |
+| headoffice  | mobilebanking |
+| headoffice  | netbanking    |
+| zone1       | fixeddeposit  |
+| zone1       | mobilebanking |
+| zone1       | netbanking    |
+| zone2       | fixeddeposit  |
+| zone2       | netbanking    |
+| zone3       | fixeddeposit  |
+| zone3       | locker        |
+| zone3       | netbanking    |
+| zone4       | netbanking    |
+| zone5       | locker        |
+| zone6       | fixeddeposit  |
+| zone6       | locker        |
+| zone7       | locker        |
+| zone7       | mobilebanking |
+| zone8       | locker        |
+| zone8       | mobilebanking |
+| zone9       | locker        |
++-------------+---------------+
+
+

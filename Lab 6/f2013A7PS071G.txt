@@ -1,0 +1,45 @@
+mysql> update PAYMENT set AMOUNT=(select round(avg(AMOUNT)) from LOAN) where P_NO='p1' AND L_NO='car1';
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+mysql> select LN_NO from LOAN L where LN_NO in(select L_NO from PAYMENT group by L_NO having avg(AMOUNT) > (select avg(AMOUNT) from LOAN));
+Empty set (0.00 sec)
+
+
+mysql> select distinct  BR_NAME from LOAN L where AMOUNT>all(select AMOUNT from LOAN where BR_NAME in (select BRN_NAME from BRANCH where CITY='tirupathi'));
++---------+
+| BR_NAME |
++---------+
+| zone1   |
+| zone3   |
+| zone4   |
+| zone5   |
+| zone6   |
++---------+
+5 rows in set (0.00 sec)
+
+
+mysql> select NAME,C_ID from CUSTOMER C where exists(select CUST_ID from DEPOSITOR where CUST_ID=C_ID) AND exists(select CUST_ID from BORROWER where CUST_ID=C_ID); 
++---------+------+
+| NAME    | C_ID |
++---------+------+
+| haritha | c1   |
+| himani  | c2   |
+| shankar | c3   |
+| yogitha | c6   |
++---------+------+
+4 rows in set (0.00 sec)
+
+
+mysql> select ACC_NO from ACCOUNT where not exists (select AC_NO from DEPOSITOR where AC_NO=ACC_NO);
++------------+
+| ACC_NO     |
++------------+
+| 2000000003 |
+| 2000000004 |
+| 2000000006 |
+| 2000000011 |
++------------+
+4 rows in set (0.00 sec)
+

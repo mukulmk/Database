@@ -1,0 +1,122 @@
+				2013A7PS071G
+				Mukul Kothari
+				
+				
+QUES1			
+mysql> create procedure total() 
+	-> begin 
+	-> declare noofhloans,noofploans,noofcloans INT default 0;
+	-> select count(LN_NO) into noofhloans from LOAN where LN_NO like 'h%'; 
+	-> select count(LN_NO) into noofploans from LOAN where LN_NO like 'p%'; 
+	-> select count(LN_NO) into noofcloans from LOAN where LN_NO like 'c%'; 
+	-> select noofhloans; 
+	-> select noofploans; 
+	-> select noofcloans; 
+	-> end//
+Query OK, 0 rows affected (0.00 sec)
+	
+mysql> delimiter ;
+mysql> call total();
++------------+
+| noofhloans |
++------------+
+|          6 |
++------------+
+1 row in set (0.00 sec)
+
++------------+
+| noofploans |
++------------+
+|          4 |
++------------+
+1 row in set (0.00 sec)
+
++------------+
+| noofcloans |
++------------+
+|          6 |
++------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+QUES2
+mysql> delimiter //
+mysql> create procedure branch_total(IN branch_name VARCHAR(25));
+	-> begin
+    -> select sum(BALANCE) from ACCOUNT where BR_NAME=branch_name;
+    -> end//
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> call branch_total('zone1') //
++--------------+
+| sum(BALANCE) |
++--------------+
+|        13000 |
++--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+QUES3
+create procedure rem_at(IN loan_number char(10),OUT status VARCHAR(25),OUT rem_amt decimal(10,0)) 
+begin
+declare amount1,amount2 decimal(10,0) default 0;
+select sum(AMOUNT) into amount1 from PAYMENT group by L_NO having L_NO=loan_number;
+select AMOUNT into amount2 from LOAN where LN_NO=loan_number;
+set rem_amt=amount2-amount1;
+If rem_amt>0 THEN set status='NOTPAID';
+ELSEIF rem_amt=0 THEN set status='PAID';
+END IF;
+select rem_amt;
+select status;
+END //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call rem_at('car2',@status,@paid) //
++---------+
+| rem_amt |
++---------+
+|  497000 |
++---------+
+1 row in set (0.00 sec)
+
++---------+
+| status  |
++---------+
+| NOTPAID |
++---------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+
+QUES4
+create procedure interest()
+begin
+declare cnt INT default 1;
+declare lno CHAR(10);
+declare lmk char(10);
+declare date1, date2 date;
+declare diff,irst,amt INT;
+while cnt<=6
+do
+		set lmk=concat('hou', lno)
+		select date into date1 from PAYMENT where P_NO='p1' and L_NO=lno
+		select curdate() into date2;
+		select datediff(date2,date1)/30 + 1 into diff;
+		select AMOUNT into amt from LOAN where LN_NO=lno;
+		select AMOUNT*diff*0.02 into irst;
+		select irst;
+		set cnt=cnt+1;
+end while
+end //
+
+
